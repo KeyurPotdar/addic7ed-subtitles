@@ -19,13 +19,14 @@ def format_url(name, season, episode):
     return 'http://www.addic7ed.com/serie/{0}/{1}/{2}/1'.format(name, season, episode)
 
 
-def download_sub(link, root, session, srt_path, referer):
+def download_sub(link, root, session, srt_path, referer, version):
     try:
         root.destroy()
         r = session.get('http://www.addic7ed.com'+link,
                         headers={'User-Agent': headers['User-Agent'], 'Referer': referer})
         with open(srt_path, 'wb') as f:
             f.write(r.content)
+        logging.info('Downloaded {!r} for {!r}'.format(version, srt_path))
     except Exception as e:
         logging.error(str(e), exc_info=True)
         return
@@ -57,15 +58,20 @@ def show_subtitles(url, srt_path):
                 version, downloads, language, link = sub
                 v = version.split()[1].rstrip(',').lower()
                 all_versions = {v, v.replace('sva', 'avs'), v.replace('avs', 'sva'),
-                                v.replace('web-tbs', 'web.x264-tbs')}
+                                v.replace('web-tbs', 'web.x264-tbs'), v.replace('repack.deflate', 'deflate')}
                 if any(v in srt_path.lower() for v in all_versions):
                     print('Auto-download:', srt_path)
-                    download_sub(link, root, session, srt_path, url)
+                    download_sub(link=link, root=root, session=session, 
+                                 srt_path=srt_path, referer=url, version=version)
                     return
 
                 for col, label in enumerate([row, version, downloads, language]):
                     tk.Label(root, text=label).grid(column=col, row=row, sticky=tk.W, padx=5, pady=5)
-                tk.Button(root, text='Download', command=lambda c=link: download_sub(c, root, session, srt_path, url)) \
+                tk.Button(root, text='Download', command=lambda c=link: download_sub(link=c, root=root, 
+                                                                                     session=session, 
+                                                                                     srt_path=srt_path, 
+                                                                                     referer=url, 
+                                                                                     version=version))\
                     .grid(column=4, row=row, sticky=tk.W, padx=10, pady=5)
 
             root.mainloop()
