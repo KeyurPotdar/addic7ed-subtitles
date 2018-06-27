@@ -1,13 +1,13 @@
-import os
-import sys
 import logging
+import os
 import re
 import requests
-from bs4 import BeautifulSoup
+import sys
 import tkinter as tk
+from bs4 import BeautifulSoup
 
 LOG_FILE = os.path.splitext(os.path.abspath(__file__))[0] + '.log'
-logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s \n%(message)s \n')
+logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s %(message)s ')
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 '
                          '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
@@ -61,16 +61,16 @@ def show_subtitles(url, srt_path):
                                 v.replace('web-tbs', 'web.x264-tbs'), v.replace('repack.deflate', 'deflate')}
                 if any(v in srt_path.lower() for v in all_versions):
                     print('Auto-download:', srt_path)
-                    download_sub(link=link, root=root, session=session, 
+                    download_sub(link=link, root=root, session=session,
                                  srt_path=srt_path, referer=url, version=version)
                     return
 
                 for col, label in enumerate([row, version, downloads, language]):
                     tk.Label(root, text=label).grid(column=col, row=row, sticky=tk.W, padx=5, pady=5)
-                tk.Button(root, text='Download', command=lambda c=link: download_sub(link=c, root=root, 
-                                                                                     session=session, 
-                                                                                     srt_path=srt_path, 
-                                                                                     referer=url, 
+                tk.Button(root, text='Download', command=lambda c=link: download_sub(link=c, root=root,
+                                                                                     session=session,
+                                                                                     srt_path=srt_path,
+                                                                                     referer=url,
                                                                                      version=version))\
                     .grid(column=4, row=row, sticky=tk.W, padx=10, pady=5)
 
