@@ -41,11 +41,12 @@ def show_subtitles(url, srt_path):
             for sub in soup.find_all('td', colspan='3', class_='NewsTitle'):
                 table = sub.find_parent('table')
                 version = sub.text.strip()
-                downloads = table.select('.newsDate')[-1].text
+                downloads = table.find_all('tr')[3].td.text
                 downloads = int(re.search(r'(\d+)\s+Downloads', downloads).groups()[0])
                 language = table.find('td', class_='language').text.strip()
                 link = table.select('.buttonDownload')[-1]['href']
-                all_subtitles.append((version, downloads, language, link))
+                if language == 'English':
+                    all_subtitles.append((version, downloads, language, link))
 
             all_subtitles.sort(key=lambda k: -k[1])
 
@@ -56,9 +57,11 @@ def show_subtitles(url, srt_path):
 
             for row, sub in enumerate(all_subtitles, 1):
                 version, downloads, language, link = sub
-                v = version.split()[1].rstrip(',').lower()
+                v = version.split('Version ')[1].split(',')[0].lower().replace(' ', '.')
                 all_versions = {v, v.replace('sva', 'avs'), v.replace('avs', 'sva'),
-                                v.replace('web-tbs', 'web.x264-tbs'), v.replace('repack.deflate', 'deflate')}
+                                v.replace('web-tbs', 'web.x264-tbs'), v.replace('repack.deflate', 'deflate'),
+                                v.replace('hdtv.killers', 'hdtv.x264-killers'),
+                                v.replace('hdtv.avs_sva', 'avs'), v.replace('hdtv.avs_sva', 'sva')}
                 if any(v in srt_path.lower() for v in all_versions):
                     print('Auto-download:', srt_path)
                     download_sub(link=link, root=root, session=session,
@@ -92,7 +95,7 @@ def analyze_path(full_path):
         logging.info('Invalid RegEx for file: {}'.format(full_path))
         return
 
-    name = name.rstrip('.').replace('.', '%20')
+    name = name.rstrip('.').replace('.', '%20').lower()
     url = format_url(name, season, episode)
     show_subtitles(url, file_path+'.srt')
 
