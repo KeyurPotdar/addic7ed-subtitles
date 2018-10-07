@@ -19,11 +19,11 @@ def format_url(name, season, episode):
     return 'http://www.addic7ed.com/serie/{0}/{1}/{2}/1'.format(name, season, episode)
 
 
-def download_sub(link, root, session, srt_path, referer, version):
+def download_sub(link, root, session, srt_path, referrer, version):
     try:
         root.destroy()
         r = session.get('http://www.addic7ed.com'+link,
-                        headers={'User-Agent': headers['User-Agent'], 'Referer': referer})
+                        headers={'User-Agent': headers['User-Agent'], 'Referer': referrer})
         with open(srt_path, 'wb') as f:
             f.write(r.content)
         logging.info('Downloaded {!r} for {!r}'.format(version, srt_path))
@@ -65,7 +65,7 @@ def show_subtitles(url, srt_path):
                 if any(v in srt_path.lower() for v in all_versions):
                     print('Auto-download:', srt_path)
                     download_sub(link=link, root=root, session=session,
-                                 srt_path=srt_path, referer=url, version=version)
+                                 srt_path=srt_path, referrer=url, version=version)
                     return
 
                 for col, label in enumerate([row, version, downloads, language]):
@@ -73,7 +73,7 @@ def show_subtitles(url, srt_path):
                 tk.Button(root, text='Download', command=lambda c=link: download_sub(link=c, root=root,
                                                                                      session=session,
                                                                                      srt_path=srt_path,
-                                                                                     referer=url,
+                                                                                     referrer=url,
                                                                                      version=version))\
                     .grid(column=4, row=row, sticky=tk.W, padx=10, pady=5)
 
