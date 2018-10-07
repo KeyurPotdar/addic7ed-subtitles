@@ -44,7 +44,7 @@ def show_subtitles(url, srt_path):
                 downloads = table.find_all('tr')[3].td.text
                 downloads = int(re.search(r'(\d+)\s+Downloads', downloads).groups()[0])
                 language = table.find('td', class_='language').text.strip()
-                link = table.select('.buttonDownload')[-1]['href']
+                link = table.find_all('tr')[2].select('.buttonDownload')[-1]['href']
                 if language == 'English':
                     all_subtitles.append((version, downloads, language, link))
 
