@@ -24,7 +24,7 @@ def format_url(name, season, episode):
     >>> url
     'http://www.addic7ed.com/serie/the office/2/3/1'
     """
-    return 'http://www.addic7ed.com/serie/{0}/{1}/{2}/1'.format(name.replace(' ', '%20'), season, episode)
+    return 'http://www.addic7ed.com/serie/{0}/{1}/{2}/1'.format(name.replace('.', '%20'), season, episode)
 
 
 def download_sub(link, root, session, srt_path, referer, version):
@@ -63,7 +63,7 @@ def get_version_set(v):
         ('hdtv.avs_sva', 'avs'),
         ('hdtv.avs_sva', 'sva')
     ]
-    all_versions = set(v)
+    all_versions = {v}
 
     for old, new in version_mapper:
         all_versions.add(v.replace(old, new))
