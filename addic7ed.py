@@ -1,9 +1,10 @@
 import logging
 import os
 import re
-import requests
 import sys
 import tkinter as tk
+
+import requests
 from bs4 import BeautifulSoup
 
 LOG_FILE = os.path.splitext(os.path.abspath(__file__))[0] + '.log'
@@ -20,9 +21,9 @@ def format_url(name, season, episode):
     Returns the URL formed by using `name`, `season` and `episode`.
 
     Example:
-    >>> url = format_url('the office', 2, 3)
+    >>> url = format_url('the.office', 2, 3)
     >>> url
-    'http://www.addic7ed.com/serie/the office/2/3/1'
+    'http://www.addic7ed.com/serie/the%20office/2/3/1'
     """
     return 'http://www.addic7ed.com/serie/{0}/{1}/{2}/1'.format(name.replace('.', '%20'), season, episode)
 
@@ -61,7 +62,9 @@ def get_version_set(v):
         ('repack.deflate', 'deflate'),
         ('hdtv.killers', 'hdtv.x264-killers'),
         ('hdtv.avs_sva', 'avs'),
-        ('hdtv.avs_sva', 'sva')
+        ('hdtv.avs_sva', 'sva'),
+        ('repack.amzn.web-dl-ntb', 'repack.amzn.web-dl.ddp5.1.h.264-ntb'),
+        ('amzn.web-dl-ntb', 'amzn.web-dl.ddp5.1.h.264-ntb'),
     ]
     all_versions = {v}
 
