@@ -149,9 +149,6 @@ def analyze_path(full_path):
 
     name = name.rstrip('.').lower()
 
-    # Special cases (personalization)
-    name = name.replace('shameless us', 'shameless (us)')
-
     url = format_url(name, season, episode)
     show_subtitles(url, file_path+'.srt')
 
