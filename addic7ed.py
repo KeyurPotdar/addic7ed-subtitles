@@ -139,19 +139,20 @@ def analyze_path(full_path):
         return
 
     path, file = os.path.split(file_path)
-    try:
-        # Get name, season, episode from the file name
-        # Can only match files with the format: (tv_show_name)s(season_number)e(episide_number)
-        name, season, episode = re.search(r'(.*)[sS](\d\d)[eE](\d\d)', file).groups()
-    except AttributeError:
-        logging.info('Invalid RegEx for file: {}'.format(full_path))
+
+    match = re.search(r'(.*)[sS](\d+)[eE](\d+)', file)
+    if not match:
+        match = re.search(r'(.*)(\d+)x(\d+)', file)
+
+    if not match:
+        logging.info('No RegEx match for file: {}'.format(full_path))
         return
 
+    name, season, episode = match.groups()
     name = name.rstrip('.').lower()
 
     url = format_url(name, season, episode)
     show_subtitles(url, file_path+'.srt')
-
 
 def main():
     for path in sys.argv:
