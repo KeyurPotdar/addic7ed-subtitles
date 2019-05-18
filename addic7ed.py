@@ -3,6 +3,7 @@ import os
 import re
 import sys
 import tkinter as tk
+from multiprocessing import Process
 
 import requests
 from bs4 import BeautifulSoup
@@ -63,6 +64,10 @@ def get_version_set(v):
         ('hdtv.killers', 'hdtv.x264-killers'),
         ('hdtv.avs_sva', 'avs'),
         ('hdtv.avs_sva', 'sva'),
+        ('avs-sva', 'avs'),
+        ('avs-sva', 'sva'),
+        ('sva-avs', 'avs'),
+        ('sva-avs', 'sva'),
         ('repack.amzn.web-dl-ntb', 'repack.amzn.web-dl.ddp5.1.h.264-ntb'),
         ('amzn.web-dl-ntb', 'amzn.web-dl.ddp5.1.h.264-ntb'),
     ]
@@ -154,15 +159,16 @@ def analyze_path(full_path):
     url = format_url(name, season, episode)
     show_subtitles(url, file_path+'.srt')
 
+
 def main():
     for path in sys.argv:
         if os.path.isdir(path):
             for dir_path, _, file_names in os.walk(path):
                 for filename in file_names:
                     file_path = os.path.join(dir_path, filename)
-                    analyze_path(file_path)
+                    Process(target=analyze_path, args=(file_path,)).start()
         else:
-            analyze_path(path)
+            Process(target=analyze_path, args=(path,)).start()
 
 
 if __name__ == '__main__':
